@@ -1,0 +1,44 @@
+output:
+  step_interval: 5
+
+diagnostics:
+  screen_interval: 60
+  log_file: log.json
+
+mesh:
+  filename: "global.nc"
+  projection:
+    type: "Mercator"
+    center: [0.0, 45.0]
+  rotation:
+    enabled: true
+    pole_location: [114.16991, 0.77432]
+
+simulation:
+  start_time: 2025-01-01
+  end_time: 2025-02-01
+  time_step: 12m
+
+physics:
+  manning_n: "mesh"
+  cf_lower_limit: 0.0010
+  tau0: 0.0022222
+  smagorinsky_coefficient: 0.2
+  min_viscosity: 1.0e-6
+
+numeric:
+  solver: implicit
+  gwce_coefficients: [0.5, 0.5, 0.0]
+
+forcing:
+  ramp:
+    enabled: true
+    duration: 5d
+  tide:
+    sal:
+      enabled: true
+    potential:
+      enabled: true
+
+initial_conditions:
+  water_level: 0.0

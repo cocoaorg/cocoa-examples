@@ -1,0 +1,80 @@
+output:
+  step_interval: 60
+
+diagnostics:
+  screen_interval: 3600
+
+mesh:
+  filename: "flow_channel_radiation.nc"
+  projection:
+    type: "EquidistantCylindrical"
+    center: [-89.0, 0.0]
+
+simulation:
+  start_time: 2026-01-01
+  end_time: 2026-01-04
+  time_step: 2s
+
+physics:
+  manning_n: 0.025
+  cf_lower_limit: 0.0025
+  tau0: 0.005
+
+numeric:
+  solver: explicit
+  gwce_coefficients: [0.0, 1.0, 0.0]
+
+forcing:
+  ramp:
+    enabled: true
+    duration: 2d
+
+  tide:
+    potential:
+      enabled: false
+    boundary:
+      enabled: true
+      constituents:
+        - name: M2
+          frequency: 1.4051890280e-04
+          nodal_factor: 1.0
+          equilibrium_arg: 0.0
+          boundary_values:
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+            - { amplitude: 0.005, phase: 0.0 }
+
+  flow_boundary:
+    enabled: true
+    ramp:
+      enabled: true
+      duration: 2d
+    segments:
+      - segment_index: 0
+        time_series_file: "flow_segment0.yaml"
+
+initial_conditions:
+  water_level: 0.0
