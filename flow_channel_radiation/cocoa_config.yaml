@@ -19,6 +19,18 @@ physics:
   manning_n: 0.025
   cf_lower_limit: 0.0025
   tau0: 0.005
+  # --- wet/dry -------------------------------------------------------------
+  h0: 0.1                      # min depth for a node to count as wet [m]
+  velmin: 0.01                 # min velocity for rewetting [m/s]
+  wet_dry_slope_limiter: 1.0e9 # ADCIRC SLIM; 1e9 is effectively off
+  # --- friction ------------------------------------------------------------
+  min_depth_friction: 0.1      # HBREAK: depth floor used by the friction law [m]
+  min_velocity_friction: 0.0   # velocity floor in the friction law [m/s]
+  internal_tide_friction: 0.0  # scalar, or "mesh" to read a nodal attribute
+  # --- wind ----------------------------------------------------------------
+  wind_drag_limit: 0.0025      # cap on the wind drag coefficient
+  surface_directional_roughness: 0.0  # scalar or "mesh"
+  surface_canopy_coefficient: 1.0     # scalar or "mesh"
 
 numeric:
   solver: explicit

@@ -1,0 +1,95 @@
+output:
+  step_interval: 2h
+
+diagnostics:
+  screen_interval: 2h
+
+mesh:
+  filename: "flow_channel.nc"
+  projection:
+    type: "EquidistantCylindrical"
+    center: [-89.0, 29.0]
+
+simulation:
+  start_time: 2026-01-01
+  end_time: 2026-01-04
+  time_step: 2s
+
+physics:
+  manning_n: 0.025
+  cf_lower_limit: 0.0025
+  tau0: 0.005
+  # --- wet/dry -------------------------------------------------------------
+  h0: 0.1                      # min depth for a node to count as wet [m]
+  velmin: 0.01                 # min velocity for rewetting [m/s]
+  wet_dry_slope_limiter: 1.0e9 # ADCIRC SLIM; 1e9 is effectively off
+  # --- friction ------------------------------------------------------------
+  min_depth_friction: 0.1      # HBREAK: depth floor used by the friction law [m]
+  min_velocity_friction: 0.0   # velocity floor in the friction law [m/s]
+  internal_tide_friction: 0.0  # scalar, or "mesh" to read a nodal attribute
+  # --- wind ----------------------------------------------------------------
+  wind_drag_limit: 0.0025      # cap on the wind drag coefficient
+  surface_directional_roughness: 0.0  # scalar or "mesh"
+  surface_canopy_coefficient: 1.0     # scalar or "mesh"
+
+forcing:
+  ramp:
+    enabled: true
+    duration: 2d
+
+  tide:
+    potential:
+      enabled: false
+    boundary:
+      enabled: true
+      constituents:
+        - name: M2
+          frequency: 1.4051890280e-04
+          nodal_factor: 1.0
+          equilibrium_arg: 0.0
+          boundary_values:
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+            - { amplitude: 0.0, phase: 0.0 }
+
+  flow_boundary:
+    enabled: true
+    ramp:
+      enabled: true
+      duration: 2d
+    segments:
+      - segment_index: 0
+        time_series_file: "flow_segment0.yaml"
+
+initial_conditions:
+  water_level: 0.0
+
+checkpoint:
+  enabled: true
+  # Written by leg 1 at its end_time. The name is
+  # <file_prefix>.<YYYYMMDDTHHMMSS>.nc -- state, not just elevation, so leg 1 +
+  # leg 2 reproduces the single 3-day run.
+  restart_file: "cocoa_checkpoint.20260102T000000.nc"
