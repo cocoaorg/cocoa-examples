@@ -1,0 +1,63 @@
+output:
+  step_interval: 3600
+  filename: "cocoa_output.nc"
+
+diagnostics:
+  screen_interval: 3600
+
+mesh:
+  filename: "../global_case/global.nc"
+  projection:
+    type: "Mercator"
+    center: [0.0, 45.0]
+  rotation:
+    enabled: true
+    pole_location: [114.16991, 0.77432]
+
+simulation:
+  start_time: 2005-08-27
+  end_time: 2005-08-30
+  time_step: 720.0
+
+physics:
+  manning_n: "mesh"
+  cf_lower_limit: 0.0010
+  tau0: 0.0022222
+  smagorinsky_coefficient: 0.2
+  min_viscosity: 1.0e-6
+  # --- wet/dry -------------------------------------------------------------
+  h0: 0.1                      # min depth for a node to count as wet [m]
+  velmin: 0.01                 # min velocity for rewetting [m/s]
+  wet_dry_slope_limiter: 1.0e9 # ADCIRC SLIM; 1e9 is effectively off
+  # --- friction ------------------------------------------------------------
+  min_depth_friction: 0.1      # HBREAK: depth floor used by the friction law [m]
+  min_velocity_friction: 0.0   # velocity floor in the friction law [m/s]
+  internal_tide_friction: 0.0  # scalar, or "mesh" to read a nodal attribute
+  # --- wind ----------------------------------------------------------------
+  wind_drag_limit: 0.0025      # cap on the wind drag coefficient
+  surface_directional_roughness: 0.0  # scalar or "mesh"
+  surface_canopy_coefficient: 1.0     # scalar or "mesh"
+
+numeric:
+  solver: implicit
+  gwce_coefficients: [0.5, 0.5, 0.0]
+
+forcing:
+  ramp:
+    enabled: true
+    duration: 12h
+  meteorological:
+    enabled: true
+    vortex:
+      model: gahm
+      # Two physically identical storms in two basins: the real Atlantic
+      # Katrina best track, and the same track relocated into the open central
+      # North Pacific (see make_pacific_track.py).
+      tracks:
+        - "atlantic_katrina.dat"
+        - "pacific_shifted.dat"
+      # Open-ocean marine winds: no land roughness/canopy reduction.
+      wind_reduction: false
+
+initial_conditions:
+  water_level: 0.0

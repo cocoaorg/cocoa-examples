@@ -34,6 +34,8 @@ mpirun -np 4 cocoa -i cocoa_config.yaml --partition partition.nc
 | `flow_channel_radiation` | The same channel with a radiation outflow boundary | ~40 s |
 | `internal_weir` | Internal weir (type 24) barrier boundary with overtopping | ~40 s |
 | `global_case` | Global mesh, rotated pole, implicit solver, tidal potential + self-attraction loading | ~1 min |
+| `global_sh_australia` | GAHM parametric cyclone on a rotated Southern Hemisphere mesh | ~1 min |
+| `global_two_vortex` | Two simultaneous GAHM storms, to exercise multi-storm composition | ~1 min |
 | `wnat` | Western North Atlantic with meteorological forcing, in three input formats | ~3 min |
 
 Runtimes are single-threaded on a laptop CPU build, measured or extrapolated from a
@@ -86,6 +88,25 @@ minute timestep, tidal potential, and self-attraction/loading.
 to elevation and velocity and enabling compression -- the settings that matter
 when a month of global output would otherwise be unwieldy. Diff it against
 `cocoa_config.yaml` to see the `output` block on its own.
+
+### global_sh_australia and global_two_vortex
+
+Parametric tropical cyclone forcing with the GAHM vortex model, driven from an
+ATCF best-track file rather than gridded meteorology.
+
+`global_sh_australia` places a Southern Hemisphere cyclone on the rotated global
+mesh; the track is synthesised by `make_australia_track.py`. `global_two_vortex`
+runs the real Atlantic Katrina track alongside the same track relocated into the
+Pacific, which is what exercises multi-storm composition -- the `tracks:` key
+takes a list, and the storms are blended where their fields overlap.
+
+Both reuse the mesh from `global_case/` via a relative path, so run them from
+their own directory:
+
+```bash
+cd global_two_vortex
+cocoa -i cocoa_config.yaml
+```
 
 ### wnat
 
