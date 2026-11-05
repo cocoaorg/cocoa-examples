@@ -1,0 +1,51 @@
+# A 1 m M2 tide on a sloping beach, run on quad elements. The three
+# cocoa_config_*.yaml files in this directory differ only in mesh.filename
+# and the output names; run all three and plot_results.py compares them.
+
+mesh:
+  filename: "beach_quad.nc"     # written by make_meshes.py
+  projection:
+    type: "EquidistantCylindrical"
+    center: [-89.96, 29.01]
+
+simulation:
+  start_time: 2026-03-01
+  end_time: 2026-03-03
+  time_step: 2s
+
+physics:
+  manning_n: 0.025
+  cf_lower_limit: 0.0025
+  tau0: 0.02
+  # --- wet/dry: these matter here, since the tide floods and drains the
+  # upper beach twice a day
+  h0: 0.05                    # a node is dry below 5 cm of water
+  velmin: 0.01                # [m/s]
+  wetting_velocity: linear    # linear (ADCIRC default), quadratic or inertial
+
+numeric:
+  solver: explicit
+
+forcing:
+  ramp:
+    enabled: true
+    duration: 6h
+  tide:
+    potential:
+      enabled: false
+    boundary: {include: tide_boundary.yaml}
+
+output:
+  global:
+    filename: "quad_output.nc"
+    step_interval: 15m
+    variables:
+      pressure: false
+      wind: false
+  stations:
+    filename: "quad_stations.nc"
+    step_interval: 5m
+    locations: {include: stations.yaml}
+
+diagnostics:
+  screen_interval: 6h

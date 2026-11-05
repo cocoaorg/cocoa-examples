@@ -1,0 +1,30 @@
+# Tidal boundary shared by the three configurations (included from each).
+# One entry per node of the open boundary, south to north: 21 nodes.
+enabled: true
+constituents:
+  - name: M2
+    frequency: 1.405189028e-04   # rad/s
+    nodal_factor: 1.0
+    equilibrium_arg: 0.0
+    boundary_values:
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
+      - { amplitude: 1.0, phase: 0.0 }
