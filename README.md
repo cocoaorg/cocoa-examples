@@ -41,6 +41,7 @@ mpirun -np 4 cocoa -i cocoa_config.yaml --partition partition.nc
 | `wave_beach` | Cocoa's spectral wave model (KOMEN and ST6) coupled to the circulation; wave setup | ~5 s each |
 | `katrina_waves` | Hurricane Katrina (2005): GAHM vortex driving the coupled wave model; station output | ~15 s |
 | `water_level_correction` | A gridded data-assimilation correction, both methods, against a baseline | ~6 s each |
+| `sea_ice` | Sea-ice drag attenuation from an ice-only source composed with `domains:` | ~6 s each |
 
 Runtimes are single-threaded on a laptop CPU build, measured or extrapolated from a
 short run; they are for picking an example to try, not a benchmark.
@@ -225,6 +226,29 @@ python plot_results.py
 
 The tide boundary is `include:`d from `tide_boundary.yaml`, the same
 55-node M2 forcing as `../wnat`.
+
+### sea_ice
+
+The WNAT mesh under the CF wind and pressure from `../wnat`, with sea ice
+from a second source: `make_ice.py` writes an ice-only CF file whose ice edge
+moves south from 47 N to 39 N over five days. Ice changes the wind's drag on
+the water (Lupkes et al.'s form drag), so the wind setup under the ice
+differs from open water.
+
+Two sources means the `domains:` list in place of the flat
+`format`/`filename` form; each entry is self-contained, and between them they
+supply wind, pressure and ice. Ice is opt-in (`ice: true`), and an ice-only
+source must name its ice variable. `cocoa_config_no_ice.yaml` is the same
+run without the ice, and the figure shows the difference: a few centimeters
+of setdown in the Gulf of Maine once the ice arrives.
+
+```bash
+cd sea_ice
+python make_ice.py
+cocoa -i cocoa_config.yaml
+cocoa -i cocoa_config_no_ice.yaml
+python plot_results.py
+```
 
 ## About the configuration files
 
