@@ -1,0 +1,12 @@
+# Stations along the beach centerline, every 2 km from the open boundary.
+- { name: km0, location: [-90.000000, 29.017966] }  # bed -15.00 m
+- { name: km2, location: [-89.979458, 29.017966] }  # bed -13.30 m
+- { name: km4, location: [-89.958917, 29.017966] }  # bed -11.60 m
+- { name: km6, location: [-89.938375, 29.017966] }  # bed -9.90 m
+- { name: km8, location: [-89.917833, 29.017966] }  # bed -8.20 m
+- { name: km10, location: [-89.897292, 29.017966] }  # bed -6.50 m
+- { name: km12, location: [-89.876750, 29.017966] }  # bed -4.80 m
+- { name: km14, location: [-89.856209, 29.017966] }  # bed -3.10 m
+- { name: km16, location: [-89.835667, 29.017966] }  # bed -1.40 m
+- { name: km18, location: [-89.815125, 29.017966] }  # bed +0.30 m
+- { name: km20, location: [-89.794584, 29.017966] }  # bed +2.00 m
