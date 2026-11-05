@@ -1,0 +1,43 @@
+# The same run without ice: the baseline for cocoa_config.yaml.
+
+mesh:
+  filename: "../wnat/wnat.nc"
+  projection:
+    type: "EquidistantCylindrical"
+    center: [-76.572766, 23.241697]
+
+simulation:
+  start_time: 2026-02-01
+  end_time: 2026-02-06
+  time_step: 20s
+
+physics:
+  manning_n: 0.025
+  cf_lower_limit: 0.0010
+  tau0: 0.005
+
+numeric:
+  solver: explicit
+
+forcing:
+  ramp:
+    enabled: true
+    duration: 12h
+  tide:
+    potential:
+      enabled: true
+    boundary: {include: tide_boundary.yaml}
+  meteorological:
+    enabled: true
+    format: cf_netcdf
+    filename: "../wnat/example_met_data/cf_meteo_example.nc"
+
+output:
+  global:
+    filename: "no_ice_output.nc"
+    step_interval: 1h
+    variables:
+      ice_concentration: false
+
+diagnostics:
+  screen_interval: 12h

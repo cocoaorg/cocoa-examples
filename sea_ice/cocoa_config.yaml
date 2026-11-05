@@ -1,0 +1,55 @@
+# Wind and pressure from the ../wnat CF file, with sea ice from a second,
+# ice-only source. Ice attenuates the wind's drag on the water, so the
+# wind setup under the ice is smaller than in cocoa_config_no_ice.yaml.
+
+mesh:
+  filename: "../wnat/wnat.nc"
+  projection:
+    type: "EquidistantCylindrical"
+    center: [-76.572766, 23.241697]
+
+simulation:
+  start_time: 2026-02-01
+  end_time: 2026-02-06
+  time_step: 20s
+
+physics:
+  manning_n: 0.025
+  cf_lower_limit: 0.0010
+  tau0: 0.005
+
+numeric:
+  solver: explicit
+
+forcing:
+  ramp:
+    enabled: true
+    duration: 12h
+  tide:
+    potential:
+      enabled: true
+    boundary: {include: tide_boundary.yaml}
+  meteorological:
+    enabled: true
+    ice: true                 # ice is opt-in; any ice key without it is an error
+    ice_drag_law: lupkes      # the only law, and the default
+    # Two sources, so the domains list replaces the flat format/filename
+    # form. Each entry is self-contained; together they supply wind,
+    # pressure and ice.
+    domains:
+      - format: cf_netcdf
+        filename: "../wnat/example_met_data/cf_meteo_example.nc"
+      - format: cf_netcdf
+        filename: "ice.nc"    # written by make_ice.py
+        variables:
+          ice: siconc         # a source with ice and no wind must say so
+
+output:
+  global:
+    filename: "ice_output.nc"
+    step_interval: 1h
+    variables:
+      ice_concentration: true
+
+diagnostics:
+  screen_interval: 12h
