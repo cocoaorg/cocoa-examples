@@ -42,6 +42,7 @@ mpirun -np 4 cocoa -i cocoa_config.yaml --partition partition.nc
 | `katrina_waves` | Hurricane Katrina (2005): GAHM vortex driving the coupled wave model; station output | ~15 s |
 | `water_level_correction` | A gridded data-assimilation correction, both methods, against a baseline | ~6 s each |
 | `sea_ice` | Sea-ice drag attenuation from an ice-only source composed with `domains:` | ~6 s each |
+| `baroclinic` | Baroclinic pressure gradient from a nodal forcing file built with cocoa-ocean3d | ~6 s each |
 
 Runtimes are single-threaded on a laptop CPU build, measured or extrapolated from a
 short run; they are for picking an example to try, not a benchmark.
@@ -249,6 +250,33 @@ cocoa -i cocoa_config.yaml
 cocoa -i cocoa_config_no_ice.yaml
 python plot_results.py
 ```
+
+### baroclinic
+
+The tide-driven WNAT case with a baroclinic pressure gradient from a nodal
+forcing file. A real run builds the file from HYCOM temperature and salinity
+with `cocoa-ocean3d`; `make_forcing.py` runs the same compute, regrid and
+write steps on an analytic ocean instead, so the example needs no downloads.
+The ocean holds a warm-core eddy in the Gulf of Mexico, up to 4 C warmer
+than its surroundings in the upper few hundred meters, and the sea surface
+over it rises about 0.4 m until its slope balances the eddy's pressure
+gradient. `make_forcing.py` needs the `cocoa-tools` Python package
+(`pip install <cocoa>/utils/cocoa_tools`).
+
+```bash
+cd baroclinic
+python make_forcing.py
+cocoa -i cocoa_config.yaml
+cocoa -i cocoa_config_barotropic.yaml
+python plot_results.py
+```
+
+The forcing file carries the mesh id of `../wnat/wnat.nc`, and Cocoa refuses
+it on any other mesh. It also carries the products the internal-tide drag and
+dispersion terms read; both stay off here, since the internal-tide drag
+needs an `internal_tide_friction` attribute that `wnat.nc` lacks. The BPG's
+free-surface correction scales with the live water level, so the tide
+changes slightly everywhere, not only at the eddy.
 
 ## About the configuration files
 

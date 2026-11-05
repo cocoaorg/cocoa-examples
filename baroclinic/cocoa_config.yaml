@@ -1,0 +1,56 @@
+# The tide-driven western North Atlantic with the baroclinic pressure
+# gradient of a warm-core Gulf eddy, read from a nodal forcing file (written
+# here by make_forcing.py; in a real run by cocoa-ocean3d from HYCOM).
+# Compare against cocoa_config_barotropic.yaml, the same run without it.
+
+mesh:
+  filename: "../wnat/wnat.nc"
+  projection:
+    type: "EquidistantCylindrical"
+    center: [-76.572766, 23.241697]
+
+simulation:
+  start_time: 2026-02-01
+  end_time: 2026-02-06
+  time_step: 20s
+
+physics:
+  manning_n: 0.025
+  cf_lower_limit: 0.0010
+  tau0: 0.005
+
+numeric:
+  solver: explicit
+
+forcing:
+  ramp:
+    enabled: true
+    duration: 1d
+  tide:
+    potential:
+      enabled: true
+    boundary: {include: tide_boundary.yaml}
+  baroclinic:
+    enabled: true
+    filename: "baroclinic_forcing.nc"
+    ramp:                     # its own ramp; it does not inherit forcing.ramp
+      enabled: true
+      duration: 2d
+    # The file also carries what these two need. internal_tide needs an
+    # internal_tide_friction attribute in the mesh, which wnat.nc lacks.
+    internal_tide:
+      enabled: false
+    dispersion:
+      enabled: false
+
+output:
+  global:
+    filename: "baroclinic_output.nc"
+    step_interval: 1h
+    variables:
+      pressure: false
+      wind: false
+      bpg_effective: true     # the pressure gradient the momentum equations saw
+
+diagnostics:
+  screen_interval: 12h
