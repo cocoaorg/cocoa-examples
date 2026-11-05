@@ -40,6 +40,7 @@ mpirun -np 4 cocoa -i cocoa_config.yaml --partition partition.nc
 | `tidal_beach` | Tidal wetting and drying on triangle, quadrilateral and hybrid meshes; station output; `include:` | ~20 s each |
 | `wave_beach` | Cocoa's spectral wave model (KOMEN and ST6) coupled to the circulation; wave setup | ~5 s each |
 | `katrina_waves` | Hurricane Katrina (2005): GAHM vortex driving the coupled wave model; station output | ~15 s |
+| `water_level_correction` | A gridded data-assimilation correction, both methods, against a baseline | ~6 s each |
 
 Runtimes are single-threaded on a laptop CPU build, measured or extrapolated from a
 short run; they are for picking an example to try, not a benchmark.
@@ -193,6 +194,37 @@ minutes in `cocoa_station_output.nc`. The WNAT mesh is coarse along the coast,
 so the water levels at the gauges illustrate the coupling rather than
 reproduce the observed surge. The deep-water wave heights are closer: the
 modeled peak at NDBC 42040 is 16 m.
+
+### water_level_correction
+
+The tide-driven WNAT case with a water level correction, the field data
+assimilation produces to pull a model toward observed water levels. A
+synthetic correction stands in for an assimilated one: `make_correction.py`
+writes a CF longitude/latitude grid raising the northern Gulf of Mexico by
+up to 0.25 m, with a small patch of fill values off Florida to show how nodes
+next to missing data are treated. The correction's ramp holds it at zero for
+two days while the tide spins up, then brings it in over one.
+
+- `cocoa_config.yaml` -- `method: pressure_and_mass_adjust` (the default):
+  the water level follows the correction at once, at the cost of mass
+  conservation.
+- `cocoa_config_pressure.yaml` -- `method: pressure`: mass is conserved, and
+  the water reaches the raised level by flowing there, so it overshoots and
+  oscillates about it.
+- `cocoa_config_baseline.yaml` -- no correction, the reference for the other
+  two.
+
+```bash
+cd water_level_correction
+python make_correction.py
+cocoa -i cocoa_config.yaml
+cocoa -i cocoa_config_pressure.yaml
+cocoa -i cocoa_config_baseline.yaml
+python plot_results.py
+```
+
+The tide boundary is `include:`d from `tide_boundary.yaml`, the same
+55-node M2 forcing as `../wnat`.
 
 ## About the configuration files
 
