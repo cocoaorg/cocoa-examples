@@ -29,9 +29,12 @@ COCOA_DRY = -99990.0
 def load_cocoa_output(output_path):
     """Load Cocoa output NetCDF and return a dict of arrays."""
     ds = Dataset(output_path, "r")
+    # Peak fields go to <name>_peak.nc unless output.global.mode is combined.
+    peak_path = Path(output_path).with_name(Path(output_path).stem + "_peak.nc")
+    pk = Dataset(peak_path, "r") if peak_path.exists() else ds
     data = {}
-    data["x"] = np.array(ds.variables["x"][:])
-    data["y"] = np.array(ds.variables["y"][:])
+    data["x"] = np.array(ds.variables["lon"][:])
+    data["y"] = np.array(ds.variables["lat"][:])
     data["depth"] = np.array(ds.variables["depth"][:])
     data["elements"] = np.array(ds.variables["element"][:]) - 1
 
@@ -44,14 +47,16 @@ def load_cocoa_output(output_path):
 
     zeta_max = None
     vel_max = None
-    if "zeta_max" in ds.variables:
-        zeta_max = np.array(ds.variables["zeta_max"][:])
-    if "velocity_max" in ds.variables:
-        vel_max = np.array(ds.variables["velocity_max"][:])
-    if "wind_max" in ds.variables:
-        data["wind_max"] = np.array(ds.variables["wind_max"][:])
-    if "pressure_min" in ds.variables:
-        data["pressure_min"] = np.array(ds.variables["pressure_min"][:])
+    if "zeta_max" in pk.variables:
+        zeta_max = np.array(pk.variables["zeta_max"][:])
+    if "velocity_max" in pk.variables:
+        vel_max = np.array(pk.variables["velocity_max"][:])
+    if "wind_max" in pk.variables:
+        data["wind_max"] = np.array(pk.variables["wind_max"][:])
+    if "pressure_min" in pk.variables:
+        data["pressure_min"] = np.array(pk.variables["pressure_min"][:])
+    if pk is not ds:
+        pk.close()
     ds.close()
 
     if zeta_max is None or np.all(zeta_max <= COCOA_DRY):
