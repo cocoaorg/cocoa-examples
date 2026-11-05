@@ -28,24 +28,30 @@ mpirun -np 4 cocoa -i cocoa_config.yaml --partition partition.nc
 
 ## The examples
 
-| Directory | Demonstrates | Runtime |
+| Directory | Demonstrates | Runtime (V100) |
 |---|---|---|
-| `flow_channel` | Specified-flow (type 22) inflow boundary against a tidal outlet | ~40 s |
-| `flow_channel_radiation` | The same channel with a radiation outflow boundary | ~40 s |
-| `internal_weir` | Internal weir (type 24) barrier boundary with overtopping | ~40 s |
-| `global_case` | Global mesh, rotated pole, implicit solver, tidal potential + self-attraction loading | ~1 min |
-| `global_sh_australia` | GAHM parametric cyclone on a rotated Southern Hemisphere mesh | ~1 min |
-| `global_two_vortex` | Two simultaneous GAHM storms, to exercise multi-storm composition | ~1 min |
-| `wnat` | Western North Atlantic with meteorological forcing, in three input formats | ~3 min |
+| `flow_channel` | Specified-flow (type 22) inflow boundary against a tidal outlet | ~30 s (implicit ~100 s) |
+| `flow_channel_radiation` | The same channel with a radiation outflow boundary | ~30 s |
+| `internal_weir` | Internal weir (type 24) barrier boundary with overtopping | ~30 s |
+| `global_case` | Global mesh, rotated pole, implicit solver, tidal potential + self-attraction loading | ~5 s |
+| `global_sh_australia` | GAHM parametric cyclone on a rotated Southern Hemisphere mesh | ~2 s |
+| `global_two_vortex` | Two simultaneous GAHM storms, to exercise multi-storm composition | ~2 s |
+| `wnat` | Western North Atlantic with meteorological forcing, in three input formats | ~25 s each |
 | `tidal_beach` | Tidal wetting and drying on triangle, quadrilateral and hybrid meshes; station output; `include:` | ~20 s each |
 | `wave_beach` | Cocoa's spectral wave model (KOMEN and ST6) coupled to the circulation; wave setup | ~5 s each |
 | `katrina_waves` | Hurricane Katrina (2005): GAHM vortex driving the coupled wave model; station output | ~15 s |
 | `water_level_correction` | A gridded data-assimilation correction, both methods, against a baseline | ~6 s each |
-| `sea_ice` | Sea-ice drag attenuation from an ice-only source composed with `domains:` | ~6 s each |
+| `sea_ice` | Sea-ice drag from an ice-only source composed with `domains:` | ~6 s each |
 | `baroclinic` | Baroclinic pressure gradient from a nodal forcing file built with cocoa-ocean3d | ~6 s each |
 
-Runtimes are single-threaded on a laptop CPU build, measured or extrapolated from a
-short run; they are for picking an example to try, not a benchmark.
+Runtimes are wall times of a CUDA build on one V100, model startup included;
+a CPU build takes many times longer. They are for picking an example to try,
+not a benchmark.
+
+Most examples come with a plotting script that draws the figure committed beside
+it, and those with generated input (`tidal_beach`, `wave_beach`,
+`water_level_correction`, `sea_ice`, `baroclinic`) with a `make_*.py` script
+to run first.
 
 ### flow_channel
 
@@ -280,11 +286,13 @@ changes slightly everywhere, not only at the eddy.
 
 ## About the configuration files
 
-The `physics` block in each example lists the wet/dry, friction and wind
-parameters explicitly, **set to the model's own defaults**. They are spelled out
+The `physics` block in each of the original seven examples lists the
+wet/dry, friction, wind and advection parameters explicitly, **set to the
+model's own defaults**. They are spelled out
 so the available knobs are visible in context; leaving any of them out changes
 nothing. Values that are genuinely case-specific -- `manning_n`, `tau0`,
-`cf_lower_limit` -- appear at the top of the block.
+`cf_lower_limit` -- appear at the top of the block. The newer examples set
+only what they change.
 
 Cocoa's configuration schema is validated on load, and unknown keys are an
 error rather than being ignored, so a typo fails immediately with the offending
@@ -292,9 +300,13 @@ key named.
 
 ## Input data
 
-Meshes are committed directly; they are small. The meteorological data under
-`wnat/example_met_data/` is the exception at roughly 68 MB.
+Meshes are committed directly in Cocoa's grouped layout; they are small. The
+meteorological data under `wnat/example_met_data/` is the exception at
+roughly 68 MB. Meshes from older Cocoa versions, with the boundary variables
+at the file's root, convert with `cocoa-mesh-tools group_variables`.
 
-New examples needing generated input should commit a Python generator script
-rather than the resulting NetCDF, matching the convention Cocoa uses for its own
-test fixtures.
+Examples needing generated input commit a Python generator script rather
+than the resulting NetCDF, matching the convention Cocoa uses for its own
+test fixtures; each directory's `.gitignore` lists what its script writes.
+Several examples reuse `../wnat/wnat.nc` or `../global_case/global.nc`
+through a relative path, so run every example from its own directory.
