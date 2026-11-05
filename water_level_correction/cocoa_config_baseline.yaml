@@ -1,0 +1,48 @@
+# The same run without the correction, the baseline the other two are
+# compared against.
+
+mesh:
+  filename: "../wnat/wnat.nc"
+  projection:
+    type: "EquidistantCylindrical"
+    center: [-76.572766, 23.241697]
+
+simulation:
+  start_time: 2026-01-15
+  end_time: 2026-01-21
+  time_step: 20s
+
+physics:
+  manning_n: 0.025
+  cf_lower_limit: 0.0010
+  tau0: 0.005
+
+numeric:
+  solver: explicit
+
+forcing:
+  ramp:
+    enabled: true
+    duration: 1d
+  tide:
+    potential:
+      enabled: true
+    boundary: {include: tide_boundary.yaml}
+
+output:
+  global:
+    filename: "baseline_output.nc"
+    step_interval: 30m
+    variables:
+      pressure: false
+      wind: false
+      water_level_correction: false
+  stations:
+    filename: "baseline_stations.nc"
+    step_interval: 10m
+    variables:
+      water_level_correction: false
+    locations: {include: stations.yaml}
+
+diagnostics:
+  screen_interval: 12h

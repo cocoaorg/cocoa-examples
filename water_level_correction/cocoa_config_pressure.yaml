@@ -1,0 +1,60 @@
+# As cocoa_config.yaml, with the correction applied as a pressure alone:
+# mass is conserved, and the water reaches the raised level by flowing there.
+
+mesh:
+  filename: "../wnat/wnat.nc"
+  projection:
+    type: "EquidistantCylindrical"
+    center: [-76.572766, 23.241697]
+
+simulation:
+  start_time: 2026-01-15
+  end_time: 2026-01-21
+  time_step: 20s
+
+physics:
+  manning_n: 0.025
+  cf_lower_limit: 0.0010
+  tau0: 0.005
+
+numeric:
+  solver: explicit
+
+forcing:
+  ramp:
+    enabled: true
+    duration: 1d
+  tide:
+    potential:
+      enabled: true
+    boundary: {include: tide_boundary.yaml}
+  water_level_correction:
+    enabled: true
+    filename: "correction.nc"     # written by make_correction.py
+    format: cf_netcdf             # a lon/lat grid; "nodal" is a field on the mesh
+    variable: water_level_correction
+    method: pressure
+    ramp:
+      # Let the tide spin up for two days, then bring the correction in over
+      # one. A correction switched on at once acts like a sudden pressure jump.
+      form: linear
+      delay: 2d
+      duration: 1d
+
+output:
+  global:
+    filename: "pressure_output.nc"
+    step_interval: 30m
+    variables:
+      pressure: false
+      wind: false
+      water_level_correction: true
+  stations:
+    filename: "pressure_stations.nc"
+    step_interval: 10m
+    variables:
+      water_level_correction: true
+    locations: {include: stations.yaml}
+
+diagnostics:
+  screen_interval: 12h

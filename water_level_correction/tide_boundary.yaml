@@ -1,0 +1,64 @@
+# The western North Atlantic M2 open-boundary forcing (as in ../wnat), one
+# entry per open-boundary node. Included by every configuration here.
+enabled: true
+constituents:
+  - name: M2
+    frequency: 0.0001405189028
+    nodal_factor: 0.964086
+    equilibrium_arg: 23.057068
+    boundary_values:
+      - { amplitude: 5.2403779870e-01, phase: 344.168513 }
+      - { amplitude: 5.1732976110e-01, phase: 345.153162 }
+      - { amplitude: 5.2706011750e-01, phase: 346.113575 }
+      - { amplitude: 5.3324244030e-01, phase: 346.859185 }
+      - { amplitude: 5.2865155020e-01, phase: 347.724236 }
+      - { amplitude: 5.0947301270e-01, phase: 347.984204 }
+      - { amplitude: 4.4941930120e-01, phase: 344.86733 }
+      - { amplitude: 4.2344904470e-01, phase: 345.466815 }
+      - { amplitude: 4.0383226150e-01, phase: 348.754916 }
+      - { amplitude: 3.9126749180e-01, phase: 350.472557 }
+      - { amplitude: 3.7914106410e-01, phase: 351.772931 }
+      - { amplitude: 3.6692444640e-01, phase: 352.709484 }
+      - { amplitude: 3.4918116350e-01, phase: 353.475728 }
+      - { amplitude: 3.3486762740e-01, phase: 353.746237 }
+      - { amplitude: 3.1806490730e-01, phase: 353.811851 }
+      - { amplitude: 2.9734995350e-01, phase: 353.679103 }
+      - { amplitude: 2.7462069910e-01, phase: 353.335385 }
+      - { amplitude: 2.4999000730e-01, phase: 352.722781 }
+      - { amplitude: 2.2685077760e-01, phase: 351.965412 }
+      - { amplitude: 1.9283960250e-01, phase: 350.19675 }
+      - { amplitude: 1.4647097930e-01, phase: 345.842042 }
+      - { amplitude: 1.1945421220e-01, phase: 341.221255 }
+      - { amplitude: 8.8725083510e-02, phase: 331.041266 }
+      - { amplitude: 6.4994851300e-02, phase: 310.303256 }
+      - { amplitude: 5.6867033980e-02, phase: 291.133959 }
+      - { amplitude: 5.9129282990e-02, phase: 271.363833 }
+      - { amplitude: 6.8978975990e-02, phase: 252.98217 }
+      - { amplitude: 7.8040214330e-02, phase: 244.377192 }
+      - { amplitude: 9.1619172990e-02, phase: 237.518477 }
+      - { amplitude: 1.0683849260e-01, phase: 232.158763 }
+      - { amplitude: 1.2333230670e-01, phase: 228.0844 }
+      - { amplitude: 1.3460104480e-01, phase: 225.885942 }
+      - { amplitude: 1.4285102460e-01, phase: 224.553016 }
+      - { amplitude: 1.5008590420e-01, phase: 223.527536 }
+      - { amplitude: 1.5802197830e-01, phase: 222.45914 }
+      - { amplitude: 1.6610805980e-01, phase: 221.525006 }
+      - { amplitude: 1.7467356490e-01, phase: 220.677455 }
+      - { amplitude: 1.8621587570e-01, phase: 219.712139 }
+      - { amplitude: 1.9375889110e-01, phase: 219.113098 }
+      - { amplitude: 2.0474241200e-01, phase: 218.479873 }
+      - { amplitude: 2.1864464600e-01, phase: 217.761749 }
+      - { amplitude: 2.3341529620e-01, phase: 217.149095 }
+      - { amplitude: 2.4878150060e-01, phase: 216.840457 }
+      - { amplitude: 2.5860470600e-01, phase: 216.761947 }
+      - { amplitude: 2.7118199000e-01, phase: 216.767009 }
+      - { amplitude: 2.8508752140e-01, phase: 216.827474 }
+      - { amplitude: 2.9461709840e-01, phase: 216.894607 }
+      - { amplitude: 3.1071066760e-01, phase: 217.065474 }
+      - { amplitude: 3.3651088380e-01, phase: 217.48846 }
+      - { amplitude: 3.5543694480e-01, phase: 217.933079 }
+      - { amplitude: 3.7332262450e-01, phase: 218.472519 }
+      - { amplitude: 4.0416580420e-01, phase: 219.689235 }
+      - { amplitude: 4.3695712450e-01, phase: 221.390796 }
+      - { amplitude: 4.6941610760e-01, phase: 223.541265 }
+      - { amplitude: 4.9963926880e-01, phase: 226.343247 }

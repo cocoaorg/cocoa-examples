@@ -1,0 +1,4 @@
+# Two points inside the correction's footprint and one far outside it.
+- { name: gulf_center, location: [-89.662, 25.926] }   # NDBC 42001
+- { name: gulf_shelf, location: [-88.226, 29.208] }    # NDBC 42040
+- { name: bermuda, location: [-64.703, 32.373] }       # NOAA 2695540
