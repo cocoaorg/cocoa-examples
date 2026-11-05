@@ -29,8 +29,8 @@ def load_cocoa_output(output_path):
     """Load Cocoa output NetCDF and return a dict of arrays."""
     ds = Dataset(output_path, "r")
     data = {}
-    data["x"] = np.array(ds.variables["x"][:])
-    data["y"] = np.array(ds.variables["y"][:])
+    data["x"] = np.array(ds.variables["lon"][:])
+    data["y"] = np.array(ds.variables["lat"][:])
     data["depth"] = np.array(ds.variables["depth"][:])
     data["elements"] = np.array(ds.variables["element"][:]) - 1
 
