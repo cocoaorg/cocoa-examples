@@ -1,0 +1,9 @@
+# Model output, station output and checkpoints written by running an example
+*_output.nc
+*_output_peak.nc
+*_stations.nc
+cocoa_station_output.nc
+cocoa_checkpoint.*.nc
+*.partition_*.nc
+log.json
+__pycache__/
