@@ -168,8 +168,8 @@ def main() -> None:
     args = parser.parse_args()
 
     dp = Dataset(args.peak, "r")
-    x = np.array(dp.variables["x"][:])
-    y = np.array(dp.variables["y"][:])
+    x = np.array(dp.variables["lon"][:])
+    y = np.array(dp.variables["lat"][:])
     elements = np.array(dp.variables["element"][:]) - 1
     wind_max = np.array(dp.variables["wind_max"][:])
     zeta_max = np.array(dp.variables["zeta_max"][:])
