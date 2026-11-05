@@ -1,0 +1,9 @@
+# Stations along the beach centerline, one per km from the open boundary.
+# Bed elevation at each is in the comment (negative = below still water).
+- { name: km0, location: [-90.000000, 29.008983] }  # bed -10.000 m
+- { name: km1, location: [-89.989729, 29.008983] }  # bed -8.375 m
+- { name: km2, location: [-89.979458, 29.008983] }  # bed -6.750 m
+- { name: km3, location: [-89.969188, 29.008983] }  # bed -5.125 m
+- { name: km4, location: [-89.958917, 29.008983] }  # bed -3.500 m
+- { name: km5, location: [-89.948646, 29.008983] }  # bed -1.875 m
+- { name: km6, location: [-89.938375, 29.008983] }  # bed -0.250 m

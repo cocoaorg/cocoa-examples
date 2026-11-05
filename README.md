@@ -37,6 +37,7 @@ mpirun -np 4 cocoa -i cocoa_config.yaml --partition partition.nc
 | `global_sh_australia` | GAHM parametric cyclone on a rotated Southern Hemisphere mesh | ~1 min |
 | `global_two_vortex` | Two simultaneous GAHM storms, to exercise multi-storm composition | ~1 min |
 | `wnat` | Western North Atlantic with meteorological forcing, in three input formats | ~3 min |
+| `tidal_beach` | Tidal wetting and drying on triangle, quadrilateral and hybrid meshes; station output; `include:` | ~20 s each |
 
 Runtimes are single-threaded on a laptop CPU build, measured or extrapolated from a
 short run; they are for picking an example to try, not a benchmark.
@@ -119,6 +120,32 @@ configurations run the identical simulation from three input formats:
 
 They are the reference for what each format expects, and running more than one
 shows that the choice of format does not change the answer.
+
+### tidal_beach
+
+A basin 8 km long whose bed rises from 10 m deep at the open boundary to 3 m
+above still water at the far end, driven by a 1 m M2 tide, so the shoreline
+moves about a kilometer up and down the beach twice a day. `make_meshes.py`
+writes the same nodes three ways: all triangles, all quadrilaterals, and a
+hybrid with quadrilaterals in the middle third. Cocoa reads all three
+directly, and the three configurations differ only in the mesh and output
+names:
+
+```bash
+cd tidal_beach
+python make_meshes.py
+cocoa -i cocoa_config_triangle.yaml
+cocoa -i cocoa_config_quad.yaml
+cocoa -i cocoa_config_hybrid.yaml
+python plot_results.py
+```
+
+The tide boundary and the station list live in their own files,
+`tide_boundary.yaml` and `stations.yaml`, pulled in with `include:`; it is
+how a long per-node boundary block or station list is kept out of the main
+configuration. Stations are written to `<mesh>_stations.nc` every 5 minutes
+and report the fill value while their element is dry, which is why the
+shallowest one's series is broken at low water.
 
 ## About the configuration files
 
