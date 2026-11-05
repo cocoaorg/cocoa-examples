@@ -1,5 +1,6 @@
 output:
-  step_interval: 5
+  global:
+    step_interval: 5
 
 diagnostics:
   screen_interval: 60
@@ -29,6 +30,7 @@ physics:
   h0: 0.1                      # min depth for a node to count as wet [m]
   velmin: 0.01                 # min velocity for rewetting [m/s]
   wet_dry_slope_limiter: 1.0e9 # ADCIRC SLIM; 1e9 is effectively off
+  wetting_velocity: linear     # linear, quadratic or inertial
   # --- friction ------------------------------------------------------------
   min_depth_friction: 0.1      # HBREAK: depth floor used by the friction law [m]
   min_velocity_friction: 0.0   # velocity floor in the friction law [m/s]
@@ -37,6 +39,8 @@ physics:
   wind_drag_limit: 0.0025      # cap on the wind drag coefficient
   surface_directional_roughness: 0.0  # scalar or "mesh"
   surface_canopy_coefficient: 1.0     # scalar or "mesh"
+  # --- advection -----------------------------------------------------------
+  advection: off_at_open_boundaries  # true, false, or "mesh"
 
 numeric:
   solver: implicit

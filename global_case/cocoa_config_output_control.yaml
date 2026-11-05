@@ -1,20 +1,22 @@
 output:
-  step_interval: 1h
-  filename: "global_output.nc"
-  # split (default) = one file per writer rank; combined = a single file.
-  mode: split
-  variables:
-    # Listing any variable restricts the output to the ones set true, which is
-    # how you keep a month of global output to a manageable size.
-    zeta: true
-    velocity: true
-    pressure: false
-    wind: false
-    tide_potential: false
-    ice_concentration: false
   compression:
     level: 4       # 0-9; 0 disables. 4 is a good size/speed tradeoff for zeta.
     shuffle: true  # byte-shuffle before deflate, usually a clear win on floats
+  global:
+    step_interval: 1h
+    filename: "global_output.nc"
+    # split (default) writes the peak fields to global_output_peak.nc;
+    # combined writes them into global_output.nc beside the time series.
+    mode: split
+    variables:
+      # A variable left out keeps its default, which is on for the state and
+      # meteorological fields. Turn off what you do not need: a month of
+      # hourly global output is otherwise dominated by fields that are zero
+      # in a tide-only run.
+      zeta: true
+      velocity: true
+      pressure: false
+      wind: false
 
 diagnostics:
   screen_interval: 60
@@ -44,6 +46,7 @@ physics:
   h0: 0.1                      # min depth for a node to count as wet [m]
   velmin: 0.01                 # min velocity for rewetting [m/s]
   wet_dry_slope_limiter: 1.0e9 # ADCIRC SLIM; 1e9 is effectively off
+  wetting_velocity: linear     # linear, quadratic or inertial
   # --- friction ------------------------------------------------------------
   min_depth_friction: 0.1      # HBREAK: depth floor used by the friction law [m]
   min_velocity_friction: 0.0   # velocity floor in the friction law [m/s]
@@ -52,6 +55,8 @@ physics:
   wind_drag_limit: 0.0025      # cap on the wind drag coefficient
   surface_directional_roughness: 0.0  # scalar or "mesh"
   surface_canopy_coefficient: 1.0     # scalar or "mesh"
+  # --- advection -----------------------------------------------------------
+  advection: off_at_open_boundaries  # true, false, or "mesh"
 
 numeric:
   solver: implicit
