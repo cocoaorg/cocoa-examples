@@ -1,0 +1,62 @@
+# Hurricane Katrina (2005) on the western North Atlantic mesh: the GAHM
+# parametric vortex, built from the NHC best track, drives the circulation
+# and Cocoa's spectral wave model, and the wave model's radiation-stress
+# force feeds back into the water level. There is no tide and no gridded
+# meteorology: the vortex is the only forcing.
+
+mesh:
+  filename: "../wnat/wnat.nc"
+  projection:
+    type: "EquidistantCylindrical"
+    center: [-76.572766, 23.241697]
+
+simulation:
+  start_time: 2005-08-26 12:00:00
+  end_time: 2005-08-30 00:00:00
+  time_step: 20s
+
+physics:
+  manning_n: 0.025
+  cf_lower_limit: 0.0010
+  tau0: 0.005
+
+numeric:
+  solver: explicit
+
+forcing:
+  ramp:
+    enabled: true
+    duration: 12h
+  meteorological:
+    enabled: true
+    # No format or filename: the vortex alone supplies wind and pressure.
+    # Add a gridded source here and the vortex is blended over it instead.
+    vortex:
+      model: gahm
+      tracks:
+        - "katrina_bal122005.dat"
+  wave:
+    enabled: true
+    source: model
+    ramp:
+      duration: 12h           # the wave force's own ramp (default 1d)
+    model:
+      coupling_interval: 20m  # default 10m; a multiple of the time step
+      stop:
+        pass_fraction: 0.95   # the SWAN+ADCIRC hurricane setting (default 0.995)
+
+output:
+  global:
+    step_interval: 1h
+    variables:
+      wave_force: true
+      wave_hs: true
+      wave_dir: true
+      wave_tm01: true
+      wave_tps: true          # peak period, off by default
+  stations:
+    step_interval: 10m
+    locations: {include: stations.yaml}
+
+diagnostics:
+  screen_interval: 6h

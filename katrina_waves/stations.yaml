@@ -1,0 +1,11 @@
+# NDBC buoys and NOAA tide gauges around the Katrina landfall. Coordinates are
+# [longitude, latitude]. A station in an element that is dry when sampled
+# reports the fill value.
+- { name: ndbc_42001, location: [-89.662, 25.926] }   # central Gulf
+- { name: ndbc_42003, location: [-85.612, 26.044] }   # eastern Gulf
+- { name: ndbc_42036, location: [-84.508, 28.501] }   # West Florida shelf
+- { name: ndbc_42039, location: [-86.008, 28.788] }   # Pensacola, offshore
+- { name: ndbc_42040, location: [-88.226, 29.208] }   # off the Mississippi delta
+- { name: grand_isle, location: [-89.957, 29.263] }   # NOAA 8761724
+- { name: dauphin_island, location: [-88.075, 30.250] }  # NOAA 8735180
+- { name: pensacola, location: [-87.211, 30.404] }    # NOAA 8729840
