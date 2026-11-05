@@ -45,8 +45,8 @@ INSET_HALF_WIDTH = 13.0  # degrees around each storm center
 def load_peak(path: Path) -> dict[str, np.ndarray]:
     ds = Dataset(path, "r")
     data = {
-        "x": np.array(ds.variables["x"][:]),
-        "y": np.array(ds.variables["y"][:]),
+        "x": np.array(ds.variables["lon"][:]),
+        "y": np.array(ds.variables["lat"][:]),
         "elements": np.array(ds.variables["element"][:]) - 1,
         "zeta_max": np.array(ds.variables["zeta_max"][:]),
         "wind_max": np.array(ds.variables["wind_max"][:]),
