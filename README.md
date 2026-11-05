@@ -39,6 +39,7 @@ mpirun -np 4 cocoa -i cocoa_config.yaml --partition partition.nc
 | `wnat` | Western North Atlantic with meteorological forcing, in three input formats | ~3 min |
 | `tidal_beach` | Tidal wetting and drying on triangle, quadrilateral and hybrid meshes; station output; `include:` | ~20 s each |
 | `wave_beach` | Cocoa's spectral wave model (KOMEN and ST6) coupled to the circulation; wave setup | ~5 s each |
+| `katrina_waves` | Hurricane Katrina (2005): GAHM vortex driving the coupled wave model; station output | ~15 s |
 
 Runtimes are single-threaded on a laptop CPU build, measured or extrapolated from a
 short run; they are for picking an example to try, not a benchmark.
@@ -175,6 +176,23 @@ python plot_results.py
 The mesh comes from `../tidal_beach/make_meshes.py`, which `make_inputs.py`
 imports. Wave fields (`wave_hs`, `wave_dir`, `wave_tm01`, and the force on the
 circulation, `wave_force`) are written to both the global and station files.
+
+### katrina_waves
+
+A hindcast of Hurricane Katrina (2005) on the WNAT mesh, from 26 August
+12:00 to 30 August. The GAHM vortex, built from the NHC best track in
+`katrina_bal122005.dat`, is the only forcing: `forcing.meteorological` has a
+`vortex` block and no file. It drives the circulation and the spectral wave
+model together, and the wave force feeds back into the water level. The wave
+stop rule uses the SWAN+ADCIRC hurricane setting (`pass_fraction: 0.95`), and
+the coupling interval is 20 minutes.
+
+Station output at NDBC buoys and NOAA tide gauges (`stations.yaml`) carries
+the water level, current, wind, pressure, and wave parameters every 10
+minutes in `cocoa_station_output.nc`. The WNAT mesh is coarse along the coast,
+so the water levels at the gauges illustrate the coupling rather than
+reproduce the observed surge. The deep-water wave heights are closer: the
+modeled peak at NDBC 42040 is 16 m.
 
 ## About the configuration files
 
