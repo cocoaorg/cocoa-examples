@@ -38,6 +38,7 @@ mpirun -np 4 cocoa -i cocoa_config.yaml --partition partition.nc
 | `global_two_vortex` | Two simultaneous GAHM storms, to exercise multi-storm composition | ~1 min |
 | `wnat` | Western North Atlantic with meteorological forcing, in three input formats | ~3 min |
 | `tidal_beach` | Tidal wetting and drying on triangle, quadrilateral and hybrid meshes; station output; `include:` | ~20 s each |
+| `wave_beach` | Cocoa's spectral wave model (KOMEN and ST6) coupled to the circulation; wave setup | ~5 s each |
 
 Runtimes are single-threaded on a laptop CPU build, measured or extrapolated from a
 short run; they are for picking an example to try, not a benchmark.
@@ -146,6 +147,34 @@ how a long per-node boundary block or station list is kept out of the main
 configuration. Stations are written to `<mesh>_stations.nc` every 5 minutes
 and report the fill value while their element is dry, which is why the
 shallowest one's series is broken at low water.
+
+### wave_beach
+
+A steady 20 m/s onshore wind blows for 12 hours over a 20 km beach that
+shoals from 15 m to dry land. Cocoa's spectral wave model runs on the
+circulation mesh, grows the waves over the shelf, breaks them near the shore,
+and hands the radiation-stress force back to the circulation.
+
+- `cocoa_config.yaml` -- the wave model with every key at its default:
+  SWAN's KOMEN source terms, 36 directions by 41 frequencies, coupled every
+  10 minutes. The `wave` block needs nothing but `enabled: true`; a ramp is
+  set only because the wave force's own ramp defaults to a day.
+- `cocoa_config_st6.yaml` -- the same with `sources.physics: st6`.
+- `cocoa_config_wind_only.yaml` -- no waves, so the difference in water level
+  is the wave setdown offshore and setup at the shoreline.
+
+```bash
+cd wave_beach
+python make_inputs.py      # beach.nc and the CF wind file wind.nc
+cocoa -i cocoa_config.yaml
+cocoa -i cocoa_config_st6.yaml
+cocoa -i cocoa_config_wind_only.yaml
+python plot_results.py
+```
+
+The mesh comes from `../tidal_beach/make_meshes.py`, which `make_inputs.py`
+imports. Wave fields (`wave_hs`, `wave_dir`, `wave_tm01`, and the force on the
+circulation, `wave_force`) are written to both the global and station files.
 
 ## About the configuration files
 

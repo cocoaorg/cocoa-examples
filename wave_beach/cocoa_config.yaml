@@ -1,0 +1,59 @@
+# The internal spectral wave model on a sloping beach under a steady
+# 20 m/s onshore wind. Every wave key not set here takes its default:
+# SWAN's KOMEN package, 36 directions and 41 frequencies, a 10-minute
+# coupling interval, depth-induced breaking and Madsen bottom friction
+# with its roughness derived from manning_n.
+
+mesh:
+  filename: "beach.nc"        # written by make_inputs.py
+  projection:
+    type: "EquidistantCylindrical"
+    center: [-89.9, 29.02]
+
+simulation:
+  start_time: 2026-04-01
+  end_time: 2026-04-01 12:00:00
+  time_step: 4s
+
+physics:
+  manning_n: 0.025
+  cf_lower_limit: 0.0025
+  tau0: 0.02
+  h0: 0.05
+
+numeric:
+  solver: explicit
+
+forcing:
+  # No tide: the open boundary holds initial_conditions.water_level (0 m), so
+  # everything the shore sees is wind setup, plus wave setup where waves run.
+  ramp:
+    enabled: true
+    duration: 3h
+  meteorological:
+    enabled: true
+    format: cf_netcdf
+    filename: "wind.nc"       # written by make_inputs.py
+  wave:
+    enabled: true
+    source: model             # the default; "file" reads a radiation-stress file
+    ramp:
+      duration: 3h            # the wave force has its own ramp (default 1d)
+
+output:
+  global:
+    filename: "komen_output.nc"
+    step_interval: 30m
+    variables:
+      pressure: false
+      wave_force: true        # the force on the circulation [m2 s-2]; off by default
+      wave_hs: true
+      wave_dir: true
+      wave_tm01: true
+  stations:
+    filename: "komen_stations.nc"
+    step_interval: 10m
+    locations: {include: stations.yaml}
+
+diagnostics:
+  screen_interval: 1h
